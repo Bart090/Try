@@ -1,0 +1,44 @@
+import random
+
+def afficher_puzzle(puzzle):
+    for ligne in puzzle:
+        print(" ".join(map(str, ligne)))
+
+def melanger_puzzle(puzzle):
+    flat_puzzle = [element for sublist in puzzle for element in sublist]
+    random.shuffle(flat_puzzle)
+    return [flat_puzzle[i:i+len(puzzle)] for i in range(0, len(flat_puzzle), len(puzzle))]
+
+def est_resolu(puzzle, puzzle_resolu):
+    return puzzle == puzzle_resolu
+
+def jouer():
+    puzzle_resolu = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+    puzzle = melanger_puzzle(puzzle_resolu.copy())
+
+    while not est_resolu(puzzle, puzzle_resolu):
+        afficher_puzzle(puzzle)
+
+        mouvement = input("Entrez le numéro à déplacer (0 pour quitter) : ")
+        if mouvement == '0':
+            print("Jeu terminé.")
+            break
+
+        try:
+            mouvement = int(mouvement)
+            puzzle = deplacer_puzzle(puzzle, mouvement)
+        except ValueError:
+            print("Veuillez entrer un numéro valide.")
+
+    if est_resolu(puzzle, puzzle_resolu):
+        print("Félicitations, vous avez résolu le puzzle!")
+
+def deplacer_puzzle(puzzle, numero):
+    for i in range(len(puzzle)):
+        for j in range(len(puzzle[i])):
+            if puzzle[i][j] == numero:
+                puzzle[i][j], puzzle[empty_row][empty_col] = puzzle[empty_row][empty_col], puzzle[i][j]
+                return puzzle
+
+if __name__ == "__main__":
+    jouer()
